@@ -125,7 +125,7 @@ public:
 
         if (player->InBattlegroundQueueForBattlegroundQueueType(bgQueueTypeId))
         {
-            AddGossipItemFor(player, GOSSIP_ICON_CHAT, "加入1v1竞技场队列", GOSSIP_SENDER_MAIN, 3, "是否继续？", 0, false);
+            AddGossipItemFor(player, GOSSIP_ICON_CHAT, "退出1v1竞技场队列", GOSSIP_SENDER_MAIN, 3, "是否继续？", 0, false);
         }
         else
         {
@@ -236,7 +236,7 @@ public:
             WorldPacket Data;
             Data << player->GetArenaTeamId(ArenaTeam::GetSlotByType(ARENA_TEAM_1V1));
             player->GetSession()->HandleArenaTeamLeaveOpcode(Data);
-            handler.SendSysMessage("Arenateam deleted!");
+            handler.SendSysMessage("1v1竞技场队伍已删除!");
             CloseGossipMenuFor(player);
             return true;
         }
