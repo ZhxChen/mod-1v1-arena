@@ -125,26 +125,26 @@ public:
 
         if (player->InBattlegroundQueueForBattlegroundQueueType(bgQueueTypeId))
         {
-            AddGossipItemFor(player, GOSSIP_ICON_CHAT, "Queue leave 1v1 Arena", GOSSIP_SENDER_MAIN, 3, "Are you sure?", 0, false);
+            AddGossipItemFor(player, GOSSIP_ICON_CHAT, "加入1v1竞技场队列", GOSSIP_SENDER_MAIN, 3, "是否继续？", 0, false);
         }
         else
         {
-            AddGossipItemFor(player, GOSSIP_ICON_CHAT, "Queue enter 1v1 Arena (UnRated)", GOSSIP_SENDER_MAIN, 20);
+            AddGossipItemFor(player, GOSSIP_ICON_CHAT, "1v1 练习赛", GOSSIP_SENDER_MAIN, 20);
         }
 
         if (!player->GetArenaTeamId(ArenaTeam::GetSlotByType(ARENA_TEAM_1V1)))
         {
-            AddGossipItemFor(player, GOSSIP_ICON_CHAT, "Create new 1v1 Arena Team", GOSSIP_SENDER_MAIN, 1, "Are you sure?", sConfigMgr->GetOption<uint32>("Arena1v1.Costs", 400000), false);
+            AddGossipItemFor(player, GOSSIP_ICON_CHAT, "创建1v1竞技场战队", GOSSIP_SENDER_MAIN, 1, "是否继续？", sConfigMgr->GetOption<uint32>("Arena1v1.Costs", 400000), false);
         }
         else
         {
             if (!player->InBattlegroundQueueForBattlegroundQueueType(bgQueueTypeId))
             {
-                AddGossipItemFor(player, GOSSIP_ICON_CHAT, "Queue enter 1v1 Arena (Rated)", GOSSIP_SENDER_MAIN, 2);
-                AddGossipItemFor(player, GOSSIP_ICON_CHAT, "Arenateam Clear", GOSSIP_SENDER_MAIN, 5, "Are you sure?", 0, false);
+                AddGossipItemFor(player, GOSSIP_ICON_CHAT, "加入1v1竞技场队列", GOSSIP_SENDER_MAIN, 2);
+                AddGossipItemFor(player, GOSSIP_ICON_CHAT, "退出1v1竞技场队伍", GOSSIP_SENDER_MAIN, 5, "是否继续？", 0, false);
             }
 
-            AddGossipItemFor(player, GOSSIP_ICON_CHAT, "Shows your statistics", GOSSIP_SENDER_MAIN, 4);
+            AddGossipItemFor(player, GOSSIP_ICON_CHAT, "查看你的1v1竞技场积分", GOSSIP_SENDER_MAIN, 4);
         }
 
         SendGossipMenuFor(player, 68, creature);
@@ -171,7 +171,7 @@ public:
             }
             else
             {
-                handler.PSendSysMessage("You have to be level %u + to create a 1v1 arena team.", sConfigMgr->GetOption<uint32>("Arena1v1.MinLevel", 70));
+                handler.PSendSysMessage("你必须达到 %u + 级才能建立1v1竞技场队伍.", sConfigMgr->GetOption<uint32>("Arena1v1.MinLevel", 70));
                 CloseGossipMenuFor(player);
                 return true;
             }
@@ -181,7 +181,7 @@ public:
         case 2: // Join Queue Arena (rated)
         {
             if (Arena1v1CheckTalents(player) && !JoinQueueArena(player, creature, true))
-                handler.SendSysMessage("Something went wrong when joining the queue.");
+                handler.SendSysMessage("加入1v1竞技场队列遇到了错误.");
 
             CloseGossipMenuFor(player);
             return true;
@@ -191,7 +191,7 @@ public:
         case 20: // Join Queue Arena (unrated)
         {
             if (Arena1v1CheckTalents(player) && !JoinQueueArena(player, creature, false))
-                handler.SendSysMessage("Something went wrong when joining the queue.");
+                handler.SendSysMessage("加入1v1竞技场队列遇到了错误.");
 
             CloseGossipMenuFor(player);
             return true;
@@ -345,7 +345,7 @@ private:
         // Check if player is already in an arena team
         if (player->GetArenaTeamId(slot))
         {
-            player->GetSession()->SendArenaTeamCommandResult(ERR_ARENA_TEAM_CREATE_S, player->GetName(), "You are already in an arena team!", ERR_ALREADY_IN_ARENA_TEAM);
+            player->GetSession()->SendArenaTeamCommandResult(ERR_ARENA_TEAM_CREATE_S, player->GetName(), "你已经加入了一个1V1竞技场队伍！", ERR_ALREADY_IN_ARENA_TEAM);
             return false;
         }
 
@@ -376,7 +376,7 @@ private:
         // Register arena team
         sArenaTeamMgr->AddArenaTeam(arenaTeam);
 
-        ChatHandler(player->GetSession()).SendSysMessage("1v1 Arenateam successfully created!");
+        ChatHandler(player->GetSession()).SendSysMessage("1v1竞技场队伍已经建立!");
 
         return true;
     }
@@ -400,7 +400,7 @@ private:
 
             if (std::find(forbiddenTalents.begin(), forbiddenTalents.end(), talentInfo->TalentID) != forbiddenTalents.end())
             {
-                ChatHandler(player->GetSession()).SendSysMessage("You can not join because you have forbidden talents.");
+                ChatHandler(player->GetSession()).SendSysMessage("不能够加入1v1竞技场，因为使用违规天赋.");
                 return false;
             }
 
@@ -411,7 +411,7 @@ private:
 
         if (count >= 36)
         {
-            ChatHandler(player->GetSession()).SendSysMessage("You can not join because you have too many talent points in a forbidden tree. (Heal / Tank)");
+            ChatHandler(player->GetSession()).SendSysMessage("不能够加入1v1竞技场，因为使用了坦克或治疗天赋.");
             return false;
         }
 
